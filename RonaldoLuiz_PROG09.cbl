@@ -1,99 +1,83 @@
-       **********************
-       * Author: Ronaldo Luiz
-       * Date: 13/11
-       * Purpose: Mostra próximos 5 pares e 5 ímpares a partir de um número
-       **********************
+**********************
+* Author: Ronaldo Luiz
+* Date: 16/11
+* Purpose: Mostra próximos 5 pares e 5 ímpares a partir de um número
+**********************
 
-       IDENTIFICATION DIVISION.
-       PROGRAM-ID. PROG09.
+IDENTIFICATION DIVISION.
+PROGRAM-ID. PROG09.
 
-       ENVIRONMENT DIVISION.
-       INPUT-OUTPUT SECTION.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
 
-       DATA DIVISION.
-       WORKING-STORAGE SECTION.
-       
-       * Armazenar o número de entrada do usuário
-       01 NUMERO-INICIAL       PIC 9(4) VALUE 0.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
 
-       * Matrizes para armazenar números pares e ímpares
-       01 NUMEROS-PARES.
-           05 PAR OCCURS 5 TIMES PIC 9(4) VALUE 0.
+   01 NUMERO-INICIAL       PIC 9(4) VALUE 0.
 
-       01 NUMEROS-IMPARES.
-           05 IMPAR OCCURS 5 TIMES PIC 9(4) VALUE 0.
+   01 NUMEROS-PARES.
+       05 PAR OCCURS 5 TIMES PIC 9(4) VALUE 0.
 
-       * Variáveis de controle
-       01 CONTADOR             PIC 9 VALUE 1.
-       01 RESPOSTA             PIC X VALUE SPACE.
+   01 NUMEROS-IMPARES.
+       05 IMPAR OCCURS 5 TIMES PIC 9(4) VALUE 0.
 
-       PROCEDURE DIVISION.
+   01 CONTADOR-PAR         PIC 9 VALUE 1.
+   01 CONTADOR-IMPAR       PIC 9 VALUE 1.
+   01 RESPOSTA             PIC X VALUE SPACE.
 
-       BEGIN-PROGRAM.
-           DISPLAY "===================================".
-           DISPLAY " PROGRAMA - PRÓXIMOS NÚMEROS PARES E ÍMPARES ".
-           DISPLAY "===================================".
+   01 RESTO                PIC 9 VALUE 0.
 
-           PERFORM OBTER-NUMERO
-           PERFORM MOSTRAR-NUMEROS
+PROCEDURE DIVISION.
 
-           * Pergunta ao usuário se deseja reiniciar ou encerrar
-           PERFORM PERGUNTAR-REINICIAR
-           IF RESPOSTA = 'S'
-               GO TO BEGIN-PROGRAM
-           ELSE
-               STOP RUN.
+BEGIN-PROGRAM.
+   DISPLAY "===================================".
+   DISPLAY " PROGRAMA - PROXIMOS NUMEROS PARES E IMPARES ".
+   DISPLAY "===================================".
 
-       OBTER-NUMERO.
-           DISPLAY "Digite um número inicial:"
-           ACCEPT NUMERO-INICIAL
+   PERFORM OBTER-NUMERO
+   PERFORM MOSTRAR-NUMEROS
 
-           * Calcula os próximos 5 pares
-           PERFORM VARYING CONTADOR FROM 1 BY 1 UNTIL CONTADOR > 5
-               IF NUMERO-INICIAL MOD 2 = 0
-                   MOVE NUMERO-INICIAL TO PAR (CONTADOR)
-                   ADD 2 TO NUMERO-INICIAL
-               ELSE
-                   ADD 1 TO NUMERO-INICIAL
-                   MOVE NUMERO-INICIAL TO PAR (CONTADOR)
-                   ADD 2 TO NUMERO-INICIAL
-               END-IF
-           END-PERFORM
+   PERFORM PERGUNTAR-REINICIAR
+   IF RESPOSTA = 'S' OR RESPOSTA = 's'
+       GO TO BEGIN-PROGRAM
+   ELSE
+       STOP RUN.
 
-           * Retorna ao número inicial para calcular os ímpares
-           SUBTRACT 10 FROM NUMERO-INICIAL
-           
-           * Calcula os próximos 5 ímpares
-           PERFORM VARYING CONTADOR FROM 1 BY 1 UNTIL CONTADOR > 5
-               IF NUMERO-INICIAL MOD 2 = 1
-                   MOVE NUMERO-INICIAL TO IMPAR (CONTADOR)
-                   ADD 2 TO NUMERO-INICIAL
-               ELSE
-                   ADD 1 TO NUMERO-INICIAL
-                   MOVE NUMERO-INICIAL TO IMPAR (CONTADOR)
-                   ADD 2 TO NUMERO-INICIAL
-               END-IF
-           END-PERFORM
+OBTER-NUMERO.
+   DISPLAY "Digite um numero inicial:"
+   ACCEPT NUMERO-INICIAL
 
-       MOSTRAR-NUMEROS.
-           DISPLAY "===================================".
-           DISPLAY "Próximos 5 números pares em ordem crescente:"
-           PERFORM VARYING CONTADOR FROM 1 BY 1 UNTIL CONTADOR > 5
-               DISPLAY "  Par " CONTADOR ": " PAR (CONTADOR)
-           END-PERFORM
+   PERFORM VARYING CONTADOR-PAR FROM 1 BY 1 UNTIL CONTADOR-PAR > 5
+       COMPUTE RESTO = NUMERO-INICIAL - (NUMERO-INICIAL / 2)
+       IF RESTO = 0
+           MOVE NUMERO-INICIAL TO PAR (CONTADOR-PAR)
+           ADD 2 TO NUMERO-INICIAL
+       ELSE
+           MOVE NUMERO-INICIAL TO IMPAR (CONTADOR-IMPAR)
+           ADD 2 TO NUMERO-INICIAL
+           ADD 1 TO CONTADOR-IMPAR
+       END-IF
+   END-PERFORM.
 
-           DISPLAY "===================================".
-           DISPLAY "Próximos 5 números ímpares em ordem decrescente:"
-           PERFORM VARYING CONTADOR FROM 5 BY -1 UNTIL CONTADOR < 1
-               DISPLAY "  Ímpar " CONTADOR ": " IMPAR (CONTADOR)
-           END-PERFORM
+MOSTRAR-NUMEROS.
+   DISPLAY "===================================".
+   DISPLAY "Proximos 5 numeros pares em ordem crescente:"
+   PERFORM VARYING CONTADOR-PAR FROM 1 BY 1 UNTIL CONTADOR-PAR > 5
+       DISPLAY "  Par " CONTADOR-PAR ": " PAR (CONTADOR-PAR)
+   END-PERFORM
 
-       PERGUNTAR-REINICIAR.
-           DISPLAY "Deseja inserir um novo número? (S/N)"
-           ACCEPT RESPOSTA
-           IF RESPOSTA = 's' OR RESPOSTA = 'S'
-               MOVE 'S' TO RESPOSTA
-           ELSE
-               MOVE 'N' TO RESPOSTA.
+   DISPLAY "===================================".
+   DISPLAY "Proximos 5 numeros impares em ordem crescente:"
+   PERFORM VARYING CONTADOR-IMPAR FROM 1 BY 1 UNTIL CONTADOR-IMPAR > 5
+       DISPLAY "  Impar " CONTADOR-IMPAR ": " IMPAR (CONTADOR-IMPAR)
+   END-PERFORM.
 
-       END PROGRAM PROG09.
+PERGUNTAR-REINICIAR.
+   DISPLAY "Deseja inserir um novo número? (S/N)"
+   ACCEPT RESPOSTA
+   IF RESPOSTA = 's' OR RESPOSTA = 'S'
+       MOVE 'S' TO RESPOSTA
+   ELSE
+       MOVE 'N' TO RESPOSTA.
+
+END PROGRAM PROG09.
