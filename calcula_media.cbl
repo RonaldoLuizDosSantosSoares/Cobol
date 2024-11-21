@@ -1,4 +1,4 @@
-  * Programa para adicionar nota de p1 e p2 e depois gerar a média
+       * Programa para adicionar nota de p1 e p2 e depois gerar a média
 
        IDENTIFICATION DIVISION.
           PROGRAM-ID. MEDIA.
